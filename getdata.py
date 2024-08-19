@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
 import json
-import time
-import datetime
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -24,7 +22,7 @@ def getWAScada(ProjName="MAPi", Tag="MF30T_KWH", start_time="2024-08-13 13:00:00
         }]
     }
     url = "https://192.168.25.208/WaWebService/Json/GetDataLog/"+ProjName
-    response = requests.post(url, verify=False, headers=header, json=payload)
+    response = requests.post(url, verify=False, headers=header, json=payload, timeout=5)
     if response is not None:
         h = json.loads(response.text)
     else:
@@ -46,5 +44,4 @@ def getData():
     return res["DataLog"][0]
 
 if __name__ == '__main__':
-    print(getWAScada())
     app.run(host='0.0.0.0', port=5080, debug=True)
